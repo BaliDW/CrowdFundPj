@@ -47,13 +47,13 @@ if countPengguna >= maxPengguna {
 
     // Variabel lokal untuk menyimpan input
     var newNama string
-    var newPassword byte // <--- Perbaikan: Password harus string
+    var newPassword byte 
     var newType string
     var isTypeValid bool = false // Nama variabel lebih sesuai dengan isian tipe pengguna
 
     // ID otomatis dihitung dan diberitahukan, tidak diminta dari pengguna
     var assignedID int = nextPenggunaID
-    nextPenggunaID = nextPenggunaID + 1 // <--- Perbaikan: Gunakan = untuk increment
+    nextPenggunaID++
 
     fmt.Println("\n--- Pendaftaran Pengguna Baru ---")
     fmt.Printf("Anda akan terdaftar dengan ID: %d\n", assignedID) // Menggunakan ID otomatis
@@ -62,7 +62,7 @@ if countPengguna >= maxPengguna {
     fmt.Scanln(&newNama) // <--- Pastikan semua menggunakan Scanln
 
     fmt.Print("Masukkan Password: ")
-    fmt.Scanln(&newPassword) // <--- Pastikan semua menggunakan Scanln, dan newPassword adalah string
+    fmt.Scanln(&newPassword) // <--- Pastikan semua menggunakan Scanln
 
     for !isTypeValid { // Loop validasi tipe pengguna
         fmt.Print("Daftar sebagai (owner/user): ")
@@ -80,7 +80,7 @@ if countPengguna >= maxPengguna {
 
     newUser.ID = assignedID // Menggunakan ID yang otomatis digenerate
     newUser.tipePengguna = newType
-    newUser.password = newPassword // <--- Perbaikan: Gunakan field yang benar untuk password
+    newUser.password = newPassword
     newUser.nama = newNama
 
     // Menyimpan pengguna baru ke array global users
@@ -149,54 +149,50 @@ func showLoggedInMenu(user pengguna) {
             // Ini seharusnya tidak terjadi jika validasi tipe pengguna sudah benar saat sign up
             fmt.Println("Tipe pengguna tidak dikenal. Silakan hubungi administrator.")
             menuActive = false // Set 'menuActive' menjadi false untuk keluar dari loop
-            // 'break' dihapus di sini, loop akan berakhir secara alami karena 'menuActive' sudah false.
         }
 
         // Jika menuActive sudah false (karena tipe pengguna tidak dikenal),
         // kita tidak perlu lagi meminta input.
-        if !menuActive {
-            continue // Langsung lanjut ke evaluasi kondisi loop 'for'
-        }
-
-        fmt.Print("Pilih: ")
-
-        fmt.Scanln(&choice) // Gunakan Scanln untuk input pilihan
-		
-        switch choice {
-        case 1:
-            if user.tipePengguna == "owner" {
-                fmt.Println("Anda memilih: Buat Proyek Baru ")
-                // Panggil fungsi untuk membuat proyek baru di sini
-				createProject(user.ID)
-            } else { // user.tipePengguna == "user"
-                fmt.Println("Anda memilih: Lihat Semua Proyek ")
-                // Panggil fungsi untuk melihat semua proyek di sini
-				viewAllProjects()
-            }
-        case 2:
-            if user.tipePengguna == "owner" {
-                fmt.Println("Anda memilih: Lihat Proyek Saya (fungsi belum diimplementasi)")
-                // Panggil fungsi untuk melihat proyek milik owner di sini
-            } else { // user.tipePengguna == "user"
-                fmt.Println("Anda memilih: Berkontribusi ke Proyek (fungsi belum diimplementasi)")
-                // Panggil fungsi untuk berkontribusi di sini
-            }
-        case 3:
-             if user.tipePengguna == "owner" {
-                fmt.Println("Anda memilih: Lihat Semua Proyek")
-                // Panggil fungsi untuk melihat semua proyek di sini
-				viewAllProjects()
-            } else { // user.tipePengguna == "user"
-                fmt.Println("Anda memilih: Lihat Kontribusi Saya (fungsi belum diimplementasi)")
-                // Panggil fungsi untuk melihat kontribusi user di sini
-            }
-        case 0:
-            fmt.Println("Logout berhasil. Kembali ke menu utama.")
-            menuActive = false // Set 'menuActive' menjadi false untuk keluar dari loop
-        default:
-            fmt.Println("Pilihan tidak valid. Silakan coba lagi.")
-        }
-    }
+        if menuActive {
+	        fmt.Print("Pilih: ")
+	
+	        fmt.Scanln(&choice) // Gunakan Scanln untuk input pilihan
+			
+	        switch choice {
+	        case 1:
+	            if user.tipePengguna == "owner" {
+	                fmt.Println("Anda memilih: Buat Proyek Baru ")
+	                // Panggil fungsi untuk membuat proyek baru di sini
+					createProject(user.ID)
+	            } else { // user.tipePengguna == "user"
+	                fmt.Println("Anda memilih: Lihat Semua Proyek ")
+	                // Panggil fungsi untuk melihat semua proyek di sini
+					viewAllProjects()
+	            }
+	        case 2:
+	            if user.tipePengguna == "owner" {
+	                fmt.Println("Anda memilih: Lihat Proyek Saya (fungsi belum diimplementasi)")
+	                // Panggil fungsi untuk melihat proyek milik owner di sini
+	            } else { // user.tipePengguna == "user"
+	                fmt.Println("Anda memilih: Berkontribusi ke Proyek (fungsi belum diimplementasi)")
+	                // Panggil fungsi untuk berkontribusi di sini
+	            }
+	        case 3:
+	             if user.tipePengguna == "owner" {
+	                fmt.Println("Anda memilih: Lihat Semua Proyek")
+	                // Panggil fungsi untuk melihat semua proyek di sini
+					viewAllProjects()
+	            } else { // user.tipePengguna == "user"
+	                fmt.Println("Anda memilih: Lihat Kontribusi Saya (fungsi belum diimplementasi)")
+	                // Panggil fungsi untuk melihat kontribusi user di sini
+	            }
+	        case 0:
+	            fmt.Println("Logout berhasil. Kembali ke menu utama.")
+	            menuActive = false // Set 'menuActive' menjadi false untuk keluar dari loop
+	        default:
+	            fmt.Println("Pilihan tidak valid. Silakan coba lagi.")
+	        }
+	    }
 }
 
 // Fungsi untuk membuat proyek baru (hanya untuk owner)
@@ -263,7 +259,7 @@ func viewAllProjects() {
 }
 
 func main() {
-	var loggedInUser pengguna // Ganti nama 'login' menjadi 'loggedInUser' agar lebih jelas
+	var loggedInUser pengguna 
 	var isLoggedIn bool = false // Inisialisasi status login
 	var isEND bool = false      // Inisialisasi status selesai program
 	var initialChoice int
