@@ -151,8 +151,7 @@ func showLoggedInMenu(user pengguna) {
             menuActive = false // Set 'menuActive' menjadi false untuk keluar dari loop
         }
 
-        // Jika menuActive sudah false (karena tipe pengguna tidak dikenal),
-        // kita tidak perlu lagi meminta input.
+         // HANYA meminta input dan memproses pilihan JIKA menu masih aktif
         if menuActive {
 	        fmt.Print("Pilih: ")
 	
