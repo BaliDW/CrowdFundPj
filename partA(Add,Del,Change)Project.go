@@ -29,11 +29,8 @@ func showLoggedInMenu(user pengguna) {
             // 'break' dihapus di sini, loop akan berakhir secara alami karena 'menuActive' sudah false.
         }
 
-        // Jika menuActive sudah false (karena tipe pengguna tidak dikenal),
-        // kita tidak perlu lagi meminta input.
-        if !menuActive {
-            continue // Langsung lanjut ke evaluasi kondisi loop 'for'
-        }
+     // HANYA meminta input dan memproses pilihan JIKA menu masih aktif
+        if menuActive {
 
         fmt.Print("Pilih: ")
         fmt.Scanln(&choice) // Gunakan Scanln untuk input pilihan
