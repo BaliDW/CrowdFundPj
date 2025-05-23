@@ -263,6 +263,45 @@ func viewAllProjects() {
     fmt.Println("--------------------------------------------------------------------------------")
 }
 
+func viewMyProjects(ownerID int) {
+    fmt.Println("\n--- Proyek yang Anda Buat ---")
+    
+    var foundProjects bool = false // Flag untuk melacak apakah ada proyek ditemukan
+
+    // HEADER: Sama dengan viewAllProjects
+    fmt.Printf("%-5s %-20s %-15s %-15s %-15s %-20s\n", "ID", "Nama Proyek", "Target Dana", "Dana Terkumpul", "Jml Donatur", "Nama Owner")
+    fmt.Println("--------------------------------------------------------------------------------------------") 
+    
+    // Loop melalui semua proyek yang ada
+    var i int = 0
+    for i = 0; i < countProject; i = i + 1 {
+        p := projects[i]
+
+        // Jika ownerID proyek cocok dengan ownerID yang diberikan (pengguna yang login)
+        if p.ownerID == ownerID {
+            foundProjects = true // Set flag karena setidaknya satu proyek ditemukan
+
+            // Cari nama owner (meskipun kita sudah tahu ID-nya, ini menjaga konsistensi tampilan)
+            ownerUser, found := findPenggunaByID(p.ownerID)
+            var ownerName string
+            if found {
+                ownerName = ownerUser.nama
+            } else {
+                ownerName = "Owner Tidak Ditemukan" 
+            }
+
+            // Tampilkan detail proyek
+            fmt.Printf("%-5d %-20s %-15.2f %-15.2f %-15d %-20s\n",
+                p.ID, p.nama, p.target, p.current, p.jmlDonatur, ownerName)
+        }
+    }
+    fmt.Println("--------------------------------------------------------------------------------------------") 
+
+    if !foundProjects {
+        fmt.Println("Anda belum memiliki proyek yang terdaftar.")
+    }
+}
+
 func main() {
 	var loggedInUser pengguna // Ganti nama 'login' menjadi 'loggedInUser' agar lebih jelas
 	var isLoggedIn bool = false // Inisialisasi status login
