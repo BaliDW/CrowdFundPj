@@ -113,7 +113,7 @@ func signUp() {
 	fmt.Println("\n--- Pendaftaran Pengguna Baru ---")
 	fmt.Printf("ID Pengguna Anda (otomatis): %d\n", nextPenggunaID)
 	fmt.Print("Masukkan Nama Anda: ")
-	fmt.Scanln(&newNama) // Diasumsikan nama tidak mengandung spasi untuk Scanln sederhana
+	fmt.Scanln(&newNama)
 	fmt.Print("Masukkan Password: ")
 	fmt.Scanln(&newPassword)
 
@@ -219,10 +219,11 @@ func editProject(ownerID int) {
 	for i := 0; i < countProject; i++ {
 		if projects[i].OwnerID == ownerID {
 			hasProjects = true
-			break
+			// Tidak perlu break, flag hasProjects sudah cukup
 		}
 	}
 	if !hasProjects {
+		// Pesan "Anda belum memiliki proyek" sudah ditangani oleh viewMyProjects
 		return
 	}
 
@@ -294,7 +295,7 @@ func deleteProject(ownerID int) {
 	for i := 0; i < countProject; i++ {
 		if projects[i].OwnerID == ownerID {
 			hasProjects = true
-			break
+			// Tidak perlu break
 		}
 	}
 	if !hasProjects {
@@ -334,8 +335,8 @@ func deleteProject(ownerID int) {
 				j++
 			}
 			countProject--
-			var zeroProjek Projek // Gunakan zero value untuk membersihkan slot terakhir
-			if countProject >= 0 && countProject < maxProject { // Pengecekan batas array
+			var zeroProjek Projek
+			if countProject >= 0 && countProject < maxProject {
 				projects[countProject] = zeroProjek
 			}
 			fmt.Printf("Proyek '%s' berhasil dihapus.\n", deletedProjectName)
@@ -400,30 +401,18 @@ func contributeToProject(userID int) {
 // printProjectHeader mencetak baris header yang diformat untuk tabel daftar proyek.
 func printProjectHeader() {
 	fmt.Printf("╔%s╦%s╦%s╦%s╦%s╦%s╦%s╗\n",
-		strings.Repeat("═", idColWidth),
-		strings.Repeat("═", nameColWidth),
-		strings.Repeat("═", targetColWidth),
-		strings.Repeat("═", currentColWidth),
-		strings.Repeat("═", donaturColWidth),
-		strings.Repeat("═", ownerColWidth),
+		strings.Repeat("═", idColWidth), strings.Repeat("═", nameColWidth),
+		strings.Repeat("═", targetColWidth), strings.Repeat("═", currentColWidth),
+		strings.Repeat("═", donaturColWidth), strings.Repeat("═", ownerColWidth),
 		strings.Repeat("═", categoryColWidth))
-
 	fmt.Printf("║%-*s║%-*s║%-*s║%-*s║%-*s║%-*s║%-*s║\n",
-		idColWidth, "ID",
-		nameColWidth, "Nama Proyek",
-		targetColWidth, "Target",
-		currentColWidth, "Terkumpul",
-		donaturColWidth, "Donatur",
-		ownerColWidth, "Nama Owner",
+		idColWidth, "ID", nameColWidth, "Nama Proyek", targetColWidth, "Target",
+		currentColWidth, "Terkumpul", donaturColWidth, "Donatur", ownerColWidth, "Nama Owner",
 		categoryColWidth, "Kategori")
-
 	fmt.Printf("╠%s╬%s╬%s╬%s╬%s╬%s╬%s╣\n",
-		strings.Repeat("═", idColWidth),
-		strings.Repeat("═", nameColWidth),
-		strings.Repeat("═", targetColWidth),
-		strings.Repeat("═", currentColWidth),
-		strings.Repeat("═", donaturColWidth),
-		strings.Repeat("═", ownerColWidth),
+		strings.Repeat("═", idColWidth), strings.Repeat("═", nameColWidth),
+		strings.Repeat("═", targetColWidth), strings.Repeat("═", currentColWidth),
+		strings.Repeat("═", donaturColWidth), strings.Repeat("═", ownerColWidth),
 		strings.Repeat("═", categoryColWidth))
 }
 
@@ -435,24 +424,17 @@ func printProjectDetail(p Projek) {
 		ownerName = "N/A"
 	}
 	fmt.Printf("║%*d║%-*s║%*.2f║%*.2f║%*d║%-*s║%-*s║\n",
-		idColWidth, p.ID,
-		nameColWidth, p.Nama,
-		targetColWidth, p.Target,
-		currentColWidth, p.Current,
-		donaturColWidth, p.JmlDonatur,
-		ownerColWidth, ownerName,
+		idColWidth, p.ID, nameColWidth, p.Nama, targetColWidth, p.Target,
+		currentColWidth, p.Current, donaturColWidth, p.JmlDonatur, ownerColWidth, ownerName,
 		categoryColWidth, p.Category)
 }
 
 // printProjectFooter mencetak baris footer yang diformat untuk tabel daftar proyek.
 func printProjectFooter() {
 	fmt.Printf("╚%s╩%s╩%s╩%s╩%s╩%s╩%s╝\n",
-		strings.Repeat("═", idColWidth),
-		strings.Repeat("═", nameColWidth),
-		strings.Repeat("═", targetColWidth),
-		strings.Repeat("═", currentColWidth),
-		strings.Repeat("═", donaturColWidth),
-		strings.Repeat("═", ownerColWidth),
+		strings.Repeat("═", idColWidth), strings.Repeat("═", nameColWidth),
+		strings.Repeat("═", targetColWidth), strings.Repeat("═", currentColWidth),
+		strings.Repeat("═", donaturColWidth), strings.Repeat("═", ownerColWidth),
 		strings.Repeat("═", categoryColWidth))
 }
 
@@ -479,7 +461,6 @@ func viewMyProjects(ownerID int) {
 			ownerProjectCount++
 		}
 	}
-
 	if ownerProjectCount > 0 {
 		printProjectHeader()
 		for i := 0; i < countProject; i++ {
@@ -500,9 +481,7 @@ func searchProjectByNameSequential() {
 	fmt.Print("Masukkan Kata Kunci Nama Proyek yang dicari: ")
 	fmt.Scanln(&query)
 	fmt.Printf("\n--- Hasil Pencarian Nama dengan Kata Kunci : '%s' ---\n", query)
-
 	lowerQuery := strings.ToLower(query)
-
 	var foundAny bool = false
 	var headerPrinted bool = false
 	for i := 0; i < countProject; i++ {
@@ -530,14 +509,11 @@ func searchProjectByCategory() {
 	fmt.Print("Masukkan Kata Kunci Kategori Proyek yang dicari: ")
 	fmt.Scanln(&query)
 	fmt.Printf("\n--- Hasil Pencarian Kategori dengan Kata Kunci : '%s' ---\n", query)
-
 	if countProject == 0 {
 		fmt.Println("Tidak ada proyek untuk dicari.")
 		return
 	}
-
 	lowerQuery := strings.ToLower(query)
-
 	var foundAny bool = false
 	var headerPrinted bool = false
 	for i := 0; i < countProject; i++ {
@@ -563,27 +539,6 @@ func swapProjek(idx1 int, idx2 int) {
 	projects[idx1], projects[idx2] = projects[idx2], projects[idx1]
 }
 
-// internalSortByCategoryAscending mengurutkan array 'projects' berdasarkan bidang 'Category' secara ascending menggunakan Selection Sort.
-// Fungsi ini mungkin tidak lagi digunakan secara langsung oleh pencarian kategori jika pencarian diubah menjadi sekuensial keyword.
-// Namun, bisa tetap ada jika ada fitur lain yang memerlukan pengurutan berdasarkan kategori.
-func internalSortByCategoryAscending() {
-	n := countProject
-	if n <= 1 {
-		return
-	}
-	for i := 0; i < n-1; i++ {
-		minIndex := i
-		for j := i + 1; j < n; j++ {
-			if projects[j].Category < projects[minIndex].Category {
-				minIndex = j
-			}
-		}
-		if minIndex != i {
-			swapProjek(i, minIndex)
-		}
-	}
-}
-
 // promptAscDescOrder meminta pengguna untuk memilih urutan pengurutan (Ascending/Menaik atau Descending/Menurun).
 func promptAscDescOrder() (ascending bool, validInput bool) {
 	var orderChoice int
@@ -593,7 +548,6 @@ func promptAscDescOrder() (ascending bool, validInput bool) {
 	fmt.Println("2. Descending (Menurun)")
 	fmt.Print("Pilih mode (1-2): ")
 	fmt.Scanln(&orderChoice)
-
 	if orderChoice == 1 {
 		ascending = true
 	} else if orderChoice == 2 {
@@ -609,11 +563,8 @@ func promptAscDescOrder() (ascending bool, validInput bool) {
 func selectionSortByDana(ascending bool) {
 	n := countProject
 	if n <= 1 {
-		if n == 0 {
-			fmt.Println("Belum ada proyek yang terdaftar.")
-		} else if n == 1 {
-			fmt.Println("Hanya ada satu proyek, tidak perlu diurutkan.")
-		}
+		if n == 0 { fmt.Println("Belum ada proyek yang terdaftar.")
+		} else { fmt.Println("Hanya ada satu proyek, tidak perlu diurutkan.") }
 		viewAllProjects()
 		return
 	}
@@ -622,26 +573,15 @@ func selectionSortByDana(ascending bool) {
 		for j := i + 1; j < n; j++ {
 			performSwap := false
 			if ascending {
-				if projects[j].Current < projects[bestIndex].Current {
-					performSwap = true
-				}
+				if projects[j].Current < projects[bestIndex].Current { performSwap = true }
 			} else {
-				if projects[j].Current > projects[bestIndex].Current {
-					performSwap = true
-				}
+				if projects[j].Current > projects[bestIndex].Current { performSwap = true }
 			}
-			if performSwap {
-				bestIndex = j
-			}
+			if performSwap { bestIndex = j }
 		}
-		if bestIndex != i {
-			swapProjek(i, bestIndex)
-		}
+		if bestIndex != i { swapProjek(i, bestIndex) }
 	}
-	orderStr := "Ascending"
-	if !ascending {
-		orderStr = "Descending"
-	}
+	orderStr := "Ascending"; if !ascending { orderStr = "Descending" }
 	fmt.Printf("Proyek diurutkan berdasarkan Dana Terkumpul (%s) dengan Selection Sort.\n", orderStr)
 	viewAllProjects()
 }
@@ -650,42 +590,32 @@ func selectionSortByDana(ascending bool) {
 func insertionSortByDonatur(ascending bool) {
 	n := countProject
 	if n <= 1 {
-		if n == 0 {
-			fmt.Println("Belum ada proyek yang terdaftar.")
-		} else if n == 1 {
-			fmt.Println("Hanya ada satu proyek, tidak perlu diurutkan.")
-		}
+		if n == 0 { fmt.Println("Belum ada proyek yang terdaftar.")
+		} else { fmt.Println("Hanya ada satu proyek, tidak perlu diurutkan.") }
 		viewAllProjects()
 		return
 	}
 	for i := 1; i < n; i++ {
 		key := projects[i]
 		j := i - 1
-		keepMoving := true
+		keepMoving := true // Flag untuk mengontrol loop dalam
 		for j >= 0 && keepMoving {
 			shouldMove := false
 			if ascending {
-				if projects[j].JmlDonatur > key.JmlDonatur {
-					shouldMove = true
-				}
+				if projects[j].JmlDonatur > key.JmlDonatur { shouldMove = true }
 			} else {
-				if projects[j].JmlDonatur < key.JmlDonatur {
-					shouldMove = true
-				}
+				if projects[j].JmlDonatur < key.JmlDonatur { shouldMove = true }
 			}
 			if shouldMove {
 				projects[j+1] = projects[j]
 				j--
 			} else {
-				keepMoving = false // Hentikan pergeseran untuk 'key' saat ini
+				keepMoving = false // Menghentikan loop dalam (alternatif 'break')
 			}
 		}
 		projects[j+1] = key
 	}
-	orderStr := "Ascending"
-	if !ascending {
-		orderStr = "Descending"
-	}
+	orderStr := "Ascending"; if !ascending { orderStr = "Descending" }
 	fmt.Printf("Proyek diurutkan berdasarkan Jumlah Donatur (%s) dengan Insertion Sort.\n", orderStr)
 	viewAllProjects()
 }
@@ -698,158 +628,93 @@ func viewFundedProjects() {
 	for i := 0; i < countProject; i++ {
 		p := projects[i]
 		if p.Current >= p.Target {
-			if !headerPrinted {
-				printProjectHeader()
-				headerPrinted = true
-			}
+			if !headerPrinted { printProjectHeader(); headerPrinted = true }
 			printProjectDetail(p)
 			foundAny = true
 		}
 	}
-	if foundAny {
-		printProjectFooter()
-	} else {
-		fmt.Println("Belum ada proyek yang mencapai target pendanaan.")
-	}
+	if foundAny { printProjectFooter()
+	} else { fmt.Println("Belum ada proyek yang mencapai target pendanaan.") }
 }
 
-// showLoggedInMenu menampilkan menu utama aplikasi setelah pengguna berhasil login, dengan opsi yang berbeda berdasarkan tipe pengguna.
+// showLoggedInMenu menampilkan menu utama aplikasi setelah pengguna berhasil login.
 func showLoggedInMenu(user Pengguna) {
 	var choice int
 	var stayInMenu bool = true
 	for stayInMenu {
 		CLS()
 		const totalWidth = totalTableWidth + 2
-		const hLine = '═'
-		const vLine = '║'
-		const cLine = '─'
-		const columnSeparator = '│'
+		const hLine, vLine, cLine, columnSeparator = '═', '║', '─', '│'
 		const itemLeftPad = 1
-
 		fmt.Printf("╔%s╗\n", strings.Repeat(string(hLine), totalWidth-2))
 		title := "--- APLIKASI CROWDFUNDING ---"
 		paddingTitle := (totalWidth - 2 - len(title)) / 2
-		if paddingTitle < 0 {
-			paddingTitle = 0
-		}
+		if paddingTitle < 0 { paddingTitle = 0 }
 		remainingPaddingTitle := totalWidth - 2 - len(title) - paddingTitle
-		if remainingPaddingTitle < 0 {
-			remainingPaddingTitle = 0
-		}
+		if remainingPaddingTitle < 0 { remainingPaddingTitle = 0 }
 		fmt.Printf("%c%s%s%s%c\n", vLine, strings.Repeat(" ", paddingTitle), title, strings.Repeat(" ", remainingPaddingTitle), vLine)
 		fmt.Printf("╚%s╝\n", strings.Repeat(string(hLine), totalWidth-2))
-
 		fmt.Printf("┌%s┐\n", strings.Repeat(string(cLine), totalWidth-2))
 		userInfoContent := fmt.Sprintf("👤 Selamat Datang, %s (ID: %d | Tipe: %s)", user.Nama, user.ID, user.TipePengguna)
-		if len(userInfoContent) > totalWidth-4 {
-			userInfoContent = userInfoContent[:totalWidth-7] + "..."
-		}
+		if len(userInfoContent) > totalWidth-4 { userInfoContent = userInfoContent[:totalWidth-7] + "..." }
 		fmt.Printf("│ %-*s │\n", totalWidth-4, userInfoContent)
 		fmt.Printf("└%s┘\n", strings.Repeat(string(cLine), totalWidth-2))
-
-		menuHeader := " MENU UTAMA "
-		menuHeaderPadding := (totalWidth - 2 - len(menuHeader)) / 2
-		if menuHeaderPadding < 0 {
-			menuHeaderPadding = 0
-		}
+		menuHeader := " MENU UTAMA "; menuHeaderPadding := (totalWidth - 2 - len(menuHeader)) / 2
+		if menuHeaderPadding < 0 { menuHeaderPadding = 0 }
 		remainingMenuHeaderPadding := totalWidth - 2 - len(menuHeader) - menuHeaderPadding
-		if remainingMenuHeaderPadding < 0 {
-			remainingMenuHeaderPadding = 0
-		}
+		if remainingMenuHeaderPadding < 0 { remainingMenuHeaderPadding = 0 }
 		fmt.Printf("\n┌%s%s%s┐\n", strings.Repeat(string(cLine), menuHeaderPadding), menuHeader, strings.Repeat(string(cLine), remainingMenuHeaderPadding))
-
-		var menuOptions []string
-		var maxOptNum int
+		var menuOptions []string; var maxOptNum int
 		if user.TipePengguna == "owner" {
 			menuOptions = []string{
 				"Buat Proyek Baru", "Lihat Proyek Saya", "Ubah Proyek Saya", "Hapus Proyek Saya",
 				"Lihat Semua Proyek", "Cari Proyek berdasarkan Nama", "Cari Proyek berdasarkan Kategori",
 				"Urutkan Proyek berdasarkan Dana Terkumpul", "Urutkan Proyek berdasarkan Jumlah Donatur",
 				"Lihat Proyek Capai Target",
-			}
-			maxOptNum = 10
+			}; maxOptNum = 10
 		} else if user.TipePengguna == "user" {
 			menuOptions = []string{
 				"Lihat Semua Proyek", "Berkontribusi ke Proyek", "Cari Proyek berdasarkan Nama",
 				"Cari Proyek berdasarkan Kategori", "Urutkan Proyek berdasarkan Dana Terkumpul",
 				"Urutkan Proyek berdasarkan Jumlah Donatur", "Lihat Proyek Capai Target",
-			}
-			maxOptNum = 7
+			}; maxOptNum = 7
 		}
-
 		const innerMenuWidth = totalWidth - 2
 		menuItemTextWidthCol1 := (innerMenuWidth - 1 - (2 * itemLeftPad)) / 2
 		menuItemTextWidthCol2 := innerMenuWidth - 1 - (2 * itemLeftPad) - menuItemTextWidthCol1
-
 		fmt.Printf("%c%s%c\n", vLine, strings.Repeat(" ", innerMenuWidth), vLine)
 		optCounter := 1
 		for i := 0; i < len(menuOptions); i += 2 {
-			formattedOpt1 := fmt.Sprintf("[%d] %s", optCounter, menuOptions[i])
-			optCounter++
-			formattedOpt2 := ""
-			if i+1 < len(menuOptions) {
-				formattedOpt2 = fmt.Sprintf("[%d] %s", optCounter, menuOptions[i+1])
-				optCounter++
-			}
-			if len(formattedOpt1) > menuItemTextWidthCol1 {
-				formattedOpt1 = formattedOpt1[:menuItemTextWidthCol1-3] + "..."
-			}
-			if len(formattedOpt2) > menuItemTextWidthCol2 && formattedOpt2 != "" {
-				formattedOpt2 = formattedOpt2[:menuItemTextWidthCol2-3] + "..."
-			}
-			fmt.Printf("%c%s%-*s%c%s%-*s%c\n",
-				vLine, strings.Repeat(" ", itemLeftPad), menuItemTextWidthCol1, formattedOpt1,
-				columnSeparator, strings.Repeat(" ", itemLeftPad), menuItemTextWidthCol2, formattedOpt2,
-				vLine,
-			)
+			formattedOpt1 := fmt.Sprintf("[%d] %s", optCounter, menuOptions[i]); optCounter++
+			formattedOpt2 := ""; if i+1 < len(menuOptions) { formattedOpt2 = fmt.Sprintf("[%d] %s", optCounter, menuOptions[i+1]); optCounter++ }
+			if len(formattedOpt1) > menuItemTextWidthCol1 { formattedOpt1 = formattedOpt1[:menuItemTextWidthCol1-3] + "..." }
+			if len(formattedOpt2) > menuItemTextWidthCol2 && formattedOpt2 != "" { formattedOpt2 = formattedOpt2[:menuItemTextWidthCol2-3] + "..." }
+			fmt.Printf("%c%s%-*s%c%s%-*s%c\n", vLine, strings.Repeat(" ", itemLeftPad), menuItemTextWidthCol1, formattedOpt1,
+				columnSeparator, strings.Repeat(" ", itemLeftPad), menuItemTextWidthCol2, formattedOpt2, vLine)
 		}
 		fmt.Printf("%c%s%c\n", vLine, strings.Repeat(" ", innerMenuWidth), vLine)
 		logoutText := fmt.Sprintf("[%d] Logout", 0)
 		fmt.Printf("%c%s%-*s%c\n", vLine, strings.Repeat(" ", itemLeftPad), innerMenuWidth-itemLeftPad, logoutText, vLine)
 		fmt.Printf("%c%s%c\n", vLine, strings.Repeat(" ", innerMenuWidth), vLine)
 		fmt.Printf("└%s┘\n", strings.Repeat(string(cLine), innerMenuWidth))
-
 		if stayInMenu {
-			fmt.Printf(">> Pilih Opsi (0-%d): ", maxOptNum)
-			fmt.Scanln(&choice)
+			fmt.Printf(">> Pilih Opsi (0-%d): ", maxOptNum); fmt.Scanln(&choice)
 			actionHandled := true
 			if user.TipePengguna == "owner" {
 				switch choice {
-				case 1: createProject(user.ID)
-				case 2: viewMyProjects(user.ID)
-				case 3: editProject(user.ID)
-				case 4: deleteProject(user.ID)
-				case 5: viewAllProjects()
-				case 6: searchProjectByNameSequential()
-				case 7: searchProjectByCategory() // Diubah
-				case 8:
-					asc, valid := promptAscDescOrder()
-					if valid { selectionSortByDana(asc) }
-				case 9:
-					asc, valid := promptAscDescOrder()
-					if valid { insertionSortByDonatur(asc) }
-				case 10: viewFundedProjects()
-				case 0:
-					fmt.Println("Logout berhasil.")
-					stayInMenu = false; actionHandled = false
+				case 1: createProject(user.ID); case 2: viewMyProjects(user.ID); case 3: editProject(user.ID)
+				case 4: deleteProject(user.ID); case 5: viewAllProjects(); case 6: searchProjectByNameSequential()
+				case 7: searchProjectByCategory(); case 8: asc, valid := promptAscDescOrder(); if valid { selectionSortByDana(asc) }
+				case 9: asc, valid := promptAscDescOrder(); if valid { insertionSortByDonatur(asc) }
+				case 10: viewFundedProjects(); case 0: fmt.Println("Logout berhasil."); stayInMenu = false; actionHandled = false
 				default: fmt.Println("Pilihan menu tidak tersedia.")
 				}
 			} else if user.TipePengguna == "user" {
 				switch choice {
-				case 1: viewAllProjects()
-				case 2: contributeToProject(user.ID)
-				case 3: searchProjectByNameSequential()
-				case 4: searchProjectByCategory() // Diubah
-				case 5:
-					asc, valid := promptAscDescOrder()
-					if valid { selectionSortByDana(asc) }
-				case 6:
-					asc, valid := promptAscDescOrder()
-					if valid { insertionSortByDonatur(asc) }
-				case 7: viewFundedProjects()
-				case 0:
-					fmt.Println("Logout berhasil.")
-					stayInMenu = false; actionHandled = false
+				case 1: viewAllProjects(); case 2: contributeToProject(user.ID); case 3: searchProjectByNameSequential()
+				case 4: searchProjectByCategory(); case 5: asc, valid := promptAscDescOrder(); if valid { selectionSortByDana(asc) }
+				case 6: asc, valid := promptAscDescOrder(); if valid { insertionSortByDonatur(asc) }
+				case 7: viewFundedProjects(); case 0: fmt.Println("Logout berhasil."); stayInMenu = false; actionHandled = false
 				default: fmt.Println("Pilihan menu tidak tersedia.")
 				}
 			}
@@ -858,46 +723,38 @@ func showLoggedInMenu(user Pengguna) {
 	}
 }
 
-// loadDummyData menginisialisasi aplikasi dengan data pengguna dan proyek dummy untuk pengujian.
+// loadDummyData menginisialisasi aplikasi dengan data pengguna dan proyek dummy.
 func loadDummyData() {
 	users[countPengguna] = Pengguna{ID: nextPenggunaID, TipePengguna: "owner", Password: "owner1", Nama: "Andi_Kreator"}; countPengguna++; nextPenggunaID++
 	users[countPengguna] = Pengguna{ID: nextPenggunaID, TipePengguna: "owner", Password: "owner2", Nama: "Citra_Inovasi"}; countPengguna++; nextPenggunaID++
 	users[countPengguna] = Pengguna{ID: nextPenggunaID, TipePengguna: "user", Password: "user1", Nama: "Doni_Peduli"}; countPengguna++; nextPenggunaID++
 	users[countPengguna] = Pengguna{ID: nextPenggunaID, TipePengguna: "user", Password: "user2", Nama: "Elisa_Baikhati"}; countPengguna++; nextPenggunaID++
-	users[countPengguna] = Pengguna{ID: nextPenggunaID, TipePengguna: "owner", Password: "owner", Nama: "owner"}; countPengguna++; nextPenggunaID++ // ID: 5, Tipe: owner
-
-	projects[countProject] = Projek{ID: nextProjectID, Nama: "Game_Edukasi_Anak", Target: 2500000, Current: 0, JmlDonatur: 0, OwnerID: 1, Category: "Teknologi"}; countProject++; nextProjectID++
-	projects[countProject] = Projek{ID: nextProjectID, Nama: "Rumah_Singgah_Hewan", Target: 5000000, Current: 0, JmlDonatur: 0, OwnerID: 1, Category: "Sosial"}; countProject++; nextProjectID++
-	projects[countProject] = Projek{ID: nextProjectID, Nama: "Film_Pendek_Dokumenter", Target: 3000000, Current: 0, JmlDonatur: 0, OwnerID: 2, Category: "Seni"}; countProject++; nextProjectID++
-	projects[countProject] = Projek{ID: nextProjectID, Nama: "Pelatihan_UMKM_Digital", Target: 4000000, Current: 0, JmlDonatur: 0, OwnerID: 2, Category: "Edukasi"}; countProject++; nextProjectID++
-	projects[countProject] = Projek{ID: nextProjectID, Nama: "Penggalangan_Dana_Darurat", Target: 999999999.00, Current: 0.00, JmlDonatur: 0, OwnerID: 1, Category: "Sosial"}; countProject++; nextProjectID++
-
-	addDummyContributionRecord := func(userID, projectID int, amount float64) { // Fungsi pembantu lokal
+	users[countPengguna] = Pengguna{ID: nextPenggunaID, TipePengguna: "owner", Password: "owner", Nama: "owner"}; countPengguna++; nextPenggunaID++
+	projects[countProject] = Projek{ID: nextProjectID, Nama: "Game_Edukasi_Anak", Target: 2500000, OwnerID: 1, Category: "Teknologi"}; countProject++; nextProjectID++
+	projects[countProject] = Projek{ID: nextProjectID, Nama: "Rumah_Singgah_Hewan", Target: 5000000, OwnerID: 1, Category: "Sosial"}; countProject++; nextProjectID++
+	projects[countProject] = Projek{ID: nextProjectID, Nama: "Film_Pendek_Dokumenter", Target: 3000000, OwnerID: 2, Category: "Seni"}; countProject++; nextProjectID++
+	projects[countProject] = Projek{ID: nextProjectID, Nama: "Pelatihan_UMKM_Digital", Target: 4000000, OwnerID: 2, Category: "Edukasi"}; countProject++; nextProjectID++
+	projects[countProject] = Projek{ID: nextProjectID, Nama: "Penggalangan_Dana_Darurat", Target: 999999999.00, OwnerID: 1, Category: "Sosial"}; countProject++; nextProjectID++
+	addDummyContributionRecord := func(userID, projectID int, amount float64) {
 		if countKontribusi >= maxKontribusi { return }
 		projectIdx := findProjectArrayIndex(projectID)
 		if projectIdx != -1 {
-			projects[projectIdx].Current += amount
-			projects[projectIdx].JmlDonatur++
+			projects[projectIdx].Current += amount; projects[projectIdx].JmlDonatur++
 			contributions[countKontribusi] = Kontribusi{ID: nextKontribusiID, ProjectID: projectID, PenggunaID: userID, Jumlah: amount}
 			countKontribusi++; nextKontribusiID++
 		}
 	}
-	addDummyContributionRecord(3, 1, 1000000)
-	addDummyContributionRecord(4, 1, 1500000)
-	addDummyContributionRecord(3, 2, 2000000)
-	addDummyContributionRecord(4, 2, 500000)
-	addDummyContributionRecord(3, 3, 500000)
-	addDummyContributionRecord(4, 4, 1000000)
-	// Proyek "Penggalangan Dana Darurat" (ID:5) tidak ada donasi awal.
+	addDummyContributionRecord(3, 1, 1000000); addDummyContributionRecord(4, 1, 1500000)
+	addDummyContributionRecord(3, 2, 2000000); addDummyContributionRecord(4, 2, 500000)
+	addDummyContributionRecord(3, 3, 500000); addDummyContributionRecord(4, 4, 1000000)
 }
 
-// main adalah titik masuk utama aplikasi, mengelola alur program dari startup hingga keluar.
+// main adalah titik masuk utama aplikasi.
 func main() {
 	loadDummyData()
 	var loggedInUser Pengguna
 	var isLoggedIn bool = false
 	var stayInApp bool = true
-
 	for stayInApp {
 		CLS()
 		if !isLoggedIn {
@@ -916,8 +773,7 @@ func main() {
 			fmt.Printf("│ %-*s │\n", loginMenuWidth-4, "0. Keluar Aplikasi")
 			fmt.Printf("└%s┘\n", strings.Repeat("─", loginMenuWidth-2))
 			fmt.Print(">> Pilih Opsi: ")
-			var initialChoice int
-			fmt.Scanln(&initialChoice)
+			var initialChoice int; fmt.Scanln(&initialChoice)
 			var shouldPause bool = true
 			switch initialChoice {
 			case 1:
@@ -926,9 +782,7 @@ func main() {
 				fmt.Print("Masukkan ID Pengguna: "); fmt.Scanln(&inputID)
 				fmt.Print("Masukkan Password: "); fmt.Scanln(&inputPassword)
 				user, success := loginPengguna(inputID, inputPassword)
-				if success {
-					loggedInUser = user; isLoggedIn = true
-					fmt.Println("Login berhasil!"); shouldPause = false
+				if success { loggedInUser = user; isLoggedIn = true; fmt.Println("Login berhasil!"); shouldPause = false
 				} else { fmt.Println("Login gagal.") }
 			case 2: signUp()
 			case 0: fmt.Println("Terima kasih!"); stayInApp = false; shouldPause = false
@@ -938,8 +792,7 @@ func main() {
 		}
 		if isLoggedIn {
 			showLoggedInMenu(loggedInUser)
-			isLoggedIn = false      // Reset setelah logout dari showLoggedInMenu
-			loggedInUser = Pengguna{} // Bersihkan data pengguna setelah logout
+			isLoggedIn = false; loggedInUser = Pengguna{}
 		}
 	}
 }
